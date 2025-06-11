@@ -1,0 +1,10 @@
+[project]
+name = "pyclinai"
+version = "0.1.0"
+description = "Synthetic Clinical Note Maker"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dspy>=2.6.27",
+]
+authors = [{name = "Vineet Tiruvadi", email = "vtiruvadi@gmail.com"}]
