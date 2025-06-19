@@ -32,15 +32,5 @@ def main():
     )
 
 
-def ask_question(question: str):
-    prepend = "You are a medical expert specializing in mental health. You will answer questions about Deep Brain Stimulation for Depression."
-    prepend = "You are a medical student just learning about Deep Brain Stimulation for Depression. You will answer questions about it, but they'll be fantastical and not very accurate."
-
-    qa = dspy.Predict("question : str -> response : str")
-    response = qa(question=f"{prepend} What is Deep Brain Stimulation for Depression?")
-
-    print(response.response)
-
-
 if __name__ == "__main__":
     main()
