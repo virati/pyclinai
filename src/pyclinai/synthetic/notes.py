@@ -23,8 +23,12 @@ class medical_note(dspy.Signature):
     physical_exam: str = dspy.OutputField(
         desc="A detailed physical exam of the patient, including any relevant findings from the review of systems. Break down by all systems, including neurological, cardiovascular, respiratory, gastrointestinal, musculoskeletal, and any other relevant systems. Each system should be described in detail, including any abnormalities or findings that may be relevant to the patient's condition."
     )
-    labs: str = dspy.OutputField()
-    differential_diagnosis: str = dspy.OutputField()
+    labs: str = dspy.OutputField(
+        desc="Just provide a list of the labs, not the results, that are relevant to the patient's condition. Make sure it's formatted in a list with newlines between each lab."
+    )
+    differential_diagnosis: str = dspy.OutputField(
+        desc="Provide a list of the top 5 diagnoses that are consistent with the symptoms and other findings in the history."
+    )
     assessment: str = dspy.OutputField(
         desc="A detailed medical assessment of the patient's condition, including any relevant findings from the review of systems and labs."
     )

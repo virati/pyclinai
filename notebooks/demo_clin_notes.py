@@ -10,7 +10,7 @@ GEMINI_KEY = os.getenv("GEMINI_KEY")
 
 def main():
     lm = dspy.LM(
-        "gemini/gemini-2.5-flash-preview-04-17", api_key=GEMINI_KEY, max_tokens=6000
+        "gemini/gemini-2.5-flash-preview-04-17", api_key=GEMINI_KEY, max_tokens=10000
     )
     dspy.configure(lm=lm)
 
