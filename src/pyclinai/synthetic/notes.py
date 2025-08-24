@@ -1,6 +1,7 @@
 import dspy
 from typing import Union
 from pathlib import Path
+from pathlib import PurePath
 
 
 class medical_note(dspy.Signature):
@@ -43,7 +44,9 @@ class medical_note(dspy.Signature):
     )
 
 
-def gen_note(vignette: str, updrs_score: Union[str, int], complexity: int = 1):
+def gen_note(
+    vignette: str, updrs_score: Union[str, int], complexity: int = 1, print_note=False
+):
     """
     Generate a medical note based on a vignette.
     """
@@ -54,7 +57,10 @@ def gen_note(vignette: str, updrs_score: Union[str, int], complexity: int = 1):
         gold_updrs=updrs_score,
         complexity=complexity,
     )
-    print_note(response)
+    if print_note:
+        print_note(response)
+
+    return response
 
 
 def print_note(response: medical_note):
@@ -83,7 +89,7 @@ def print_note(response: medical_note):
     return response
 
 
-def parse_note(note: Union[str, Path] = None) -> str:
+def parse_note(note: Union[str, PurePath] = None) -> str:
     if note is None:
         raise ValueError("Note cannot be None")
 
@@ -91,7 +97,7 @@ def parse_note(note: Union[str, Path] = None) -> str:
     preparse_note: str = None
 
     if not isinstance(note, str):
-        match note.split(".")[-1].lower():
+        match PurePath(note).parts[-1].lower():
             case ".txt":
                 with open(note, "r") as f:
                     preparse_note = f.read()
