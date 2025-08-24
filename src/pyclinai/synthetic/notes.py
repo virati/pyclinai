@@ -19,7 +19,9 @@ class medical_note(dspy.Signature):
     past_medical_history: str = dspy.OutputField(
         desc="At least four paragraphs, each with at least three sentences, detailing the patient's past medical history. First paragraph should focus on the symptoms in the CC, and broaden to ask for symptoms typically associated. Second paragraph should focus on history of any/all illnesses. Third paragraph should focus on family history. Final paragraph should include occupation, socioeconomic factors, and any quirky components of the interaction with the patient."
     )
-    medications: str = dspy.OutputField()
+    medications: str = dspy.OutputField(
+        desc="A list of the patient's current medications, without dosages and frequencies. Be sure to include medications related and unrelated to the one_liner."
+    )
     review_of_systems: str = dspy.OutputField()
     physical_exam: str = dspy.OutputField(
         desc="A detailed physical exam of the patient, including any relevant findings from the review of systems. Break down by all systems, including neurological, cardiovascular, respiratory, gastrointestinal, musculoskeletal, and any other relevant systems. Each system should be described in detail, including any abnormalities or findings that may be relevant to the patient's condition."
@@ -45,7 +47,7 @@ class medical_note(dspy.Signature):
 
 
 def gen_note(
-    vignette: str, updrs_score: Union[str, int], complexity: int = 1, print_note=False
+    vignette: str, updrs_score: Union[str, int], complexity: int = 1, display_note=False
 ):
     """
     Generate a medical note based on a vignette.
@@ -57,7 +59,7 @@ def gen_note(
         gold_updrs=updrs_score,
         complexity=complexity,
     )
-    if print_note:
+    if display_note:
         print_note(response)
 
     return response
