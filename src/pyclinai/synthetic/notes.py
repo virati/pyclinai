@@ -10,11 +10,12 @@ class medical_note(dspy.Signature):
         desc="Whether the patient is an inpatient or outpatient. If inpatient, the note should be more detailed and include more information about the hospital course."
     )
     one_liner: str = dspy.InputField(
-        desc="A one-liner describing the patient's main complaint."
+        desc="A one-liner describing the patient's main complaint. A one-liner is a brief summary of the patient's true clinical state."
     )
     complexity: int = dspy.InputField(
         desc="The complexity of the case, on a scale from 1 to 10, where 1 is the least complex and 10 is the most complex. The more complex the case, the more the details of the note will deviate from the typical presentation for the given gold_updrs score."
     )
+    ## OUTPUTS BELOW ##
     chief_complaint: str = dspy.OutputField(
         desc="A concise summary of the patient's chief complaint. How long the symptoms have been present and the patient's age must be included. Be sure to factor in the complexity score in determining the chief complaint."
     )
