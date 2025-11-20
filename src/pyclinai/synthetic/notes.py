@@ -72,6 +72,18 @@ def gen_note(vignette: str, complexity: int = 1, display_note=False):
     return response
 
 
+def merge_information(note: medical_note, additional_info: dict) -> medical_note:
+    """
+    Merge additional information into an existing medical note. This can be used to update the note with new information or to add missing information.
+    """
+    for key, value in additional_info.items():
+        if hasattr(note, key):
+            setattr(note, key, value)
+        else:
+            raise ValueError(f"Medical note does not have a field named {key}")
+    return note
+
+
 def print_note(response: medical_note):
     print("Generated Medical Note:")
     print("Chief Complaint:\n---------------")
