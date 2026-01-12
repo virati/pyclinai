@@ -3,6 +3,10 @@
 
 A library for *generative* clinical AI - mainly patient and clinic-level simulations.
 
+Things we'll focus on simulating:
+- [ ] Clinical SOAP Notes
+- [ ] ...
+
 ## Setup
 Install through pypi:
 
@@ -14,5 +18,6 @@ or
 
 ## Jumpstart
 To generate a clinical note take a look at `notebooks/demo_clin_notes.py`
+
 
 
