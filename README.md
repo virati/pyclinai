@@ -7,8 +7,11 @@ A library for *generative* clinical AI - mainly patient and clinic-level simulat
 Install through pypi:
 
 > uv add pyclinai
+
 or
+
 > pip install pyclinai
 
 ## Jumpstart
 To generate a clinical note...
+
