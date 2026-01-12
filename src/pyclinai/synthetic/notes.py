@@ -1,24 +1,30 @@
 import dspy
 from typing import Union
 from pathlib import Path
+from pathlib import PurePath
 
 
 class medical_note(dspy.Signature):
     role: str = dspy.InputField(desc="The role of the person writing the note.")
-    one_liner: str = dspy.InputField()
+    is_inpatient: bool = dspy.InputField(
+        desc="Whether the patient is an inpatient or outpatient. If inpatient, the note should be more detailed and include more information about the hospital course."
+    )
+    one_liner: str = dspy.InputField(
+        desc="A one-liner describing the patient's main complaint. A one-liner is a brief summary of the patient's true clinical state."
+    )
     complexity: int = dspy.InputField(
         desc="The complexity of the case, on a scale from 1 to 10, where 1 is the least complex and 10 is the most complex. The more complex the case, the more the details of the note will deviate from the typical presentation for the given gold_updrs score."
     )
-    gold_updrs: str = dspy.InputField(
-        desc="The ground-truth UPDRS, either the full assessment or the score, for the patient. This will be used to assess downstream tools that ingest the synthetic notes."
-    )
+    ## OUTPUTS BELOW ##
     chief_complaint: str = dspy.OutputField(
-        desc="A concise summary of the patient's chief complaint. How long the symptoms have been present and the patient's age must be included."
+        desc="A concise summary of the patient's chief complaint. How long the symptoms have been present and the patient's age must be included. Be sure to factor in the complexity score in determining the chief complaint."
     )
     past_medical_history: str = dspy.OutputField(
         desc="At least four paragraphs, each with at least three sentences, detailing the patient's past medical history. First paragraph should focus on the symptoms in the CC, and broaden to ask for symptoms typically associated. Second paragraph should focus on history of any/all illnesses. Third paragraph should focus on family history. Final paragraph should include occupation, socioeconomic factors, and any quirky components of the interaction with the patient."
     )
-    medications: str = dspy.OutputField()
+    medications: str = dspy.OutputField(
+        desc="A list of the patient's current medications, without dosages and frequencies. Be sure to include medications related and unrelated to the one_liner."
+    )
     review_of_systems: str = dspy.OutputField()
     physical_exam: str = dspy.OutputField(
         desc="A detailed physical exam of the patient, including any relevant findings from the review of systems. Break down by all systems, including neurological, cardiovascular, respiratory, gastrointestinal, musculoskeletal, and any other relevant systems. Each system should be described in detail, including any abnormalities or findings that may be relevant to the patient's condition."
@@ -41,9 +47,15 @@ class medical_note(dspy.Signature):
     UPDRS_score: int = dspy.OutputField(
         desc="Unified Parkinson's Disease Rating Scale score, if applicable. This is a score used to quantify the severity of Parkinson's disease symptoms in the patient."
     )
+    HDRS_score: int = dspy.OutputField(
+        desc="Hamilton Depression Rating Scale score, if applicable. This is a score used to quantify the severity of depression symptoms in the patient."
+    )
+    true_disease: str = dspy.OutputField(
+        desc="The true disease that the patient has, based on the symptoms and other findings in the history."
+    )
 
 
-def gen_note(vignette: str, updrs_score: Union[str, int], complexity: int = 1):
+def gen_note(vignette: str, complexity: int = 1, display_note=False):
     """
     Generate a medical note based on a vignette.
     """
@@ -51,10 +63,13 @@ def gen_note(vignette: str, updrs_score: Union[str, int], complexity: int = 1):
     response = note_gen(
         role="World Expert Physician",
         one_liner=vignette,
-        gold_updrs=updrs_score,
         complexity=complexity,
+        is_inpatient=True,
     )
-    print_note(response)
+    if display_note:
+        print_note(response)
+
+    return response
 
 
 def print_note(response: medical_note):
@@ -83,7 +98,7 @@ def print_note(response: medical_note):
     return response
 
 
-def parse_note(note: Union[str, Path] = None) -> str:
+def parse_note(note: Union[str, PurePath] = None) -> str:
     if note is None:
         raise ValueError("Note cannot be None")
 
@@ -91,7 +106,7 @@ def parse_note(note: Union[str, Path] = None) -> str:
     preparse_note: str = None
 
     if not isinstance(note, str):
-        match note.split(".")[-1].lower():
+        match PurePath(note).parts[-1].lower():
             case ".txt":
                 with open(note, "r") as f:
                     preparse_note = f.read()
