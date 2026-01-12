@@ -13,5 +13,6 @@ or
 > pip install pyclinai
 
 ## Jumpstart
-To generate a clinical note...
+To generate a clinical note take a look at `notebooks/demo_clin_notes.py`
+
 
