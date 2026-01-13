@@ -2,6 +2,9 @@ import dspy
 from typing import Union
 from pathlib import Path
 from pathlib import PurePath
+from typing import Optional
+
+from multimethod import multimethod
 
 
 class Vignette(dspy.Signature):
@@ -14,6 +17,7 @@ class Vignette(dspy.Signature):
     )
 
 
+@multimethod
 def gen_vignette(disease: str, patient_characteristics: Optional[str] = None) -> str:
     vignette_gen = dspy.Predict(Vignette)
     if patient_characteristics is None:
@@ -23,3 +27,8 @@ def gen_vignette(disease: str, patient_characteristics: Optional[str] = None) ->
         disease=disease, patient_characteristics=patient_characteristics
     )
     return response.vignette
+
+
+@multimethod
+def gen_vignette():
+    pass
