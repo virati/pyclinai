@@ -18,3 +18,7 @@ class DzState(dspy.Signature):
     clinical_score: int = dspy.OutputField(
         desc="The score on the clinical scale, if applicable. This should be a number appropriate for the disease progression and specific scale used for the disease"
     )
+
+
+# Given a disease and perplexity, generate a "sequence" of disease states.
+# This sequence can then be used to anchor clinical notes taken at each node.
