@@ -1,6 +1,6 @@
 import dspy
 from typing import Union
-from pathlib import Path, PurePath
+from pathlib import PurePath
 from kiff.agents.base import BaseAgent
 
 

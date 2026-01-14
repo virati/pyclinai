@@ -1,4 +1,3 @@
-import kiff
 from kiff.agents.base import BaseAgent
 from pyclinai.synthetic.notes import gen_note
 
