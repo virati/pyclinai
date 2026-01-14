@@ -1,7 +1,7 @@
 import dspy
 from typing import Union
-from pathlib import Path
-from pathlib import PurePath
+from pathlib import Path, PurePath
+from kiff.agents.base import BaseAgent
 
 
 class medical_note(dspy.Signature):
@@ -55,21 +55,22 @@ class medical_note(dspy.Signature):
     )
 
 
-def gen_note(vignette: str, complexity: int = 1, display_note=False):
+def gen_note(agent: BaseAgent, vignette: str, complexity: int = 1, display_note=False):
     """
     Generate a medical note based on a vignette.
     """
-    note_gen = dspy.Predict(medical_note)
-    response = note_gen(
-        role="World Expert Physician",
-        one_liner=vignette,
-        complexity=complexity,
-        is_inpatient=True,
-    )
-    if display_note:
-        print_note(response)
+    send_struct = {
+        "role": "World Expert Physician",
+        "one_liner": vignette,
+        "complexity": complexity,
+        "is_inpatient": True,
+    }
+    generated_note = agent.ping(send_struct, medical_note)
 
-    return response
+    if display_note:
+        print_note(generated_note)
+
+    return generated_note
 
 
 def merge_information(note: medical_note, additional_info: dict) -> medical_note:
