@@ -1,1 +1,1 @@
-from notes import *
+from .notes import *
